@@ -1,0 +1,7 @@
+* {
+    font-family: 'Arimo', sans-serif;
+  }
+  
+  .bg-orange {
+    background: linear-gradient(180deg, #3F64E5 0%, #000000 100%); 
+  }
