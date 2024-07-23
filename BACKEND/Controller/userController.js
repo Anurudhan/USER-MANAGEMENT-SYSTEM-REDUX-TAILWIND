@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
+const { verify } = require('crypto');
 
 module.exports ={
     postSignUp : async (req,res) => {
@@ -73,6 +74,52 @@ module.exports ={
         catch(err){
             console.error("Error while fetching user data:", err);
             res.status(500).json({ error: "Internal server error" });
+        }
+    },
+    updatePassword : async(req,res) => {
+        try {
+            const token = req.cookies.token;
+            if (!token) {
+                return res.json({ error: 'No token provided' });
+            }
+    
+            const verified = jwt.verify(token, process.env.JWT_SECRET);
+            if (!verified) {
+                return res.json({ error: 'Token verification failed' });
+            }
+    
+            const { currentPassword, newPassword } = req.body;
+            if (!currentPassword || !newPassword) {
+                return res.json({ error: 'Current password and new password are required' });
+            }
+    
+            const user = await User.findById(verified.user);
+    
+            const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!passwordMatch) {
+                return res.json({ error: 'The current password is incorrect!' });
+            }
+    
+            user.password = newPassword;
+            await user.save();
+    
+            res.json({ success: true });
+        } catch (err) {
+            console.log('Error occurred during the user password change:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+    updateProfile : async(req,res) => {
+        try{
+            const token = req.cookies.token;
+            const verified = jwt.verify(token, process.env.JWT_SECRET);
+            const {name,email} = req.body;
+            console.log(req.body)
+            await User.updateOne({_id:verified.user},{email,name});
+            res.json({ success : true })
+        }
+        catch(err){
+            console.log('The error occure when user profile editing!')
         }
     },
     updateImage: async(req,res) => {

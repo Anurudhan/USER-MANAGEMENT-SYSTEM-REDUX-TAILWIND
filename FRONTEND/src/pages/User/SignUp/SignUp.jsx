@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import axios from "../../../../Axios";
 import { setUserData } from "../../../redux/feature/UserSlice";
 import LoadingSpinner from "../../../Components/LoadingSpinner";
+import Toast from "../../../Components/Toast";
 
 
 
@@ -39,6 +40,10 @@ function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [status, setStatus] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+
 
   const initialValues = {
     username: "",
@@ -56,12 +61,22 @@ function Signup() {
         dispatch(setUserData(userDataResponse.data));
         navigate("/");
       }
+      else if(response.data.err){
+        setShowToast(true);
+        setToastMessage(response.data.err)
+        setStatus('error')
+      }
+      
     } catch (err) {
       setError('Error occurring while submitting: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }
   };
+  const handleCloseToast = ()=>{
+    setShowToast(false)
+  }
+
 
   return (
     <Suspense fallback={<LoadingSpinner />}>
@@ -167,6 +182,7 @@ function Signup() {
               </Link>
             </p>
           </div>
+          <Toast open={showToast} message={toastMessage} onClose={handleCloseToast} status={status} />
         </div>
       </div>
     </Suspense>

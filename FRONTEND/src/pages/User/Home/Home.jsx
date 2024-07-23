@@ -4,6 +4,7 @@ import UserNavbar from "../../../Components/UserNavbar";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import './Home.css';
+import { useSelector } from "react-redux";
 
 // Custom arrow component
 const CustomArrow = ({ className, style, onClick }) => (
@@ -15,6 +16,9 @@ const CustomArrow = ({ className, style, onClick }) => (
 );
 
 function Home() {
+
+  const userData = useSelector((state) => state.user.userData);
+
   const slides = [
     { id: 1, title: 'iPhone 12', description: 'The iPhone 12 features a new design, improved cameras, and 5G support.', imageUrl: 'https://www.cnet.com/a/img/resize/4dfd428ca182e0b90a2262b2df6cdb0ceb0355ae/hub/2020/10/30/067bd108-d594-41a2-a390-2a73f9f1ad41/apple-iphone-12-confetti-9923.jpg?auto=webp&fit=crop&height=1200&width=1200' },
     { id: 2, title: 'iPhone 13', description: 'The iPhone 13 offers longer battery life, better performance, and new color options.', imageUrl: 'https://images.pexels.com/photos/14666017/pexels-photo-14666017.jpeg?cs=srgb&dl=pexels-doouglasma-14666017.jpg&fm=jpg' },
@@ -66,6 +70,7 @@ function Home() {
       }
     ]
   };
+  
 
   return (
     <>
@@ -85,7 +90,7 @@ function Home() {
           </div>
 
           {/* Main heading */}
-          <h1 className="text-3xl font-bold mb-4 mt-4">Welcome to Apple Store</h1>
+          <h1 className="text-3xl font-bold mb-4 mt-4">{userData?'Hi! '+userData.name+'  ':''}Welcome to Apple Store</h1>
 
           {/* Section for iPhone slides */}
           <section className="mt-8">

@@ -2,25 +2,27 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { clearUserData } from "../redux/feature/UserSlice";
+import { baseURL } from "../constants/Constants.Js";
 import axios from "../../Axios";
-
 
 function UserNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userData =  useSelector((state) => state.user.userData)
+  const userData = useSelector((state) => state.user.userData);
   console.log(userData);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
-    axios.get("/logout").then(()=>{
+    axios
+      .get("/logout")
+      .then(() => {
         dispatch(clearUserData());
-        navigate('/')
-    }).catch((error) => {
-      console.error("Logout error:", error);
-    });     
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+      });
   };
-
 
   return (
     <>
@@ -35,27 +37,39 @@ function UserNavbar() {
             />
           </Link>
           <div className="md:flex space-x-4 hidden md:justify-end items-center">
-            <Link to={userData ? "/settings" : "/login"} className="text-gray-300 hover:text-white">
+            <Link
+              to={userData ? "/settings" : "/login"}
+              className="text-gray-300 hover:text-white"
+            >
               Settings
             </Link>
             {userData ? (
               <>
-                <Link to="/account" className="text-gray-300 hover:text-white">
+                <Link
+                  to="/account"
+                  className="text-gray-300 hover:text-white"
+                >
                   Account
                 </Link>
                 <button
-                onClick={handleLogout}
-                className="text-gray-300 hover:text-white"
-              >
-                Logout
-              </button>
+                  onClick={handleLogout}
+                  className="text-gray-300 hover:text-white"
+                >
+                  Logout
+                </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-300 hover:text-white">
+                <Link
+                  to="/login"
+                  className="text-gray-300 hover:text-white"
+                >
                   Login
                 </Link>
-                <Link to="/signup" className="text-gray-300 hover:text-white">
+                <Link
+                  to="/signup"
+                  className="text-gray-300 hover:text-white"
+                >
                   Signup
                 </Link>
               </>
@@ -64,21 +78,29 @@ function UserNavbar() {
               to={userData ? "/profile" : "/login"}
               className="flex items-center text-gray-300 hover:text-white"
             >
-              <svg
-                className="w-6 h-6 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16v1a3 3 0 01-3 3H9a3 3 0 01-3-3v-1"
-                ></path>
-                <circle cx="12" cy="8" r="4"></circle>
-              </svg>
+              {userData?.Profile ? (
+                <img
+                  src={baseURL + `/${userData.Profile}`}
+                  alt="Profile"
+                  className="w-6 h-6 rounded-full mr-1"
+                />
+              ) : (
+                <svg
+                  className="w-6 h-6 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 16v1a3 3 0 01-3 3H9a3 3 0 01-3-3v-1"
+                  ></path>
+                  <circle cx="12" cy="8" r="4"></circle>
+                </svg>
+              )}
               Profile
             </Link>
           </div>
@@ -120,12 +142,12 @@ function UserNavbar() {
                 >
                   Account
                 </Link>
-                <Link
-                  to="/logout"
+                <button
+                  onClick={handleLogout}
                   className="block text-gray-300 hover:text-white px-2 py-1"
                 >
                   Logout
-                </Link>
+                </button>
               </>
             ) : (
               <>
@@ -147,21 +169,29 @@ function UserNavbar() {
               to={userData ? "/profile" : "/login"}
               className="block text-gray-300 hover:text-white px-2 py-1 flex items-center"
             >
-              <svg
-                className="w-6 h-6 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16v1a3 3 0 01-3 3H9a3 3 0 01-3-3v-1"
-                ></path>
-                <circle cx="12" cy="8" r="4"></circle>
-              </svg>
+              {userData?.profileImage ? (
+                <img
+                  src={userData.profileImage}
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full mr-1"
+                />
+              ) : (
+                <svg
+                  className="w-6 h-6 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 16v1a3 3 0 01-3 3H9a3 3 0 01-3-3v-1"
+                  ></path>
+                  <circle cx="12" cy="8" r="4"></circle>
+                </svg>
+              )}
               Profile
             </Link>
           </div>
